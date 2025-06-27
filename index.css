@@ -58,6 +58,8 @@ button {
     position: relative;
 
     input {
+        width: 90%;
+        color: var(--color-white);
         font-size: 25px;
         font-weight: 600;
     }
@@ -196,6 +198,7 @@ input[type="range"]::-webkit-slider-thumb:hover {
         font-size: 16px;
         font-weight: 600;
         padding-right: 5px;
+        display: none;
     }
 
     .difficulty-bar {
