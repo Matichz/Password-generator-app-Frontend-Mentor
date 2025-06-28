@@ -31,6 +31,7 @@ handleCharacterLength()
 
 
 const form = document.getElementById('form');
+const difficultyBar = document.querySelectorAll('.difficulty-bar');
 
 const generatePassword = () => {
     form.addEventListener('submit', event => {
@@ -39,42 +40,43 @@ const generatePassword = () => {
         const lengthCharacter = form.range.value;
 
         const checkboxs = {
-            characterUpper: [form.upperLetters.checked, 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'],
-            characterLower: [form.lowerLetters.checked, 'abcdefghijklmnopqrstuvwxyz'],
-            numbers: [form.numbers.checked, '0123456789'],
-            symbols: [form.symbols.checked, '!@#$%^&*()_+-=[]{}|;:,.<>?/`~']
-        };
+            characterUpper: {
+                isChecked: form.upperLetters.checked, 
+                characters: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+            },
+            characterLower: {
+                isChecked: form.lowerLetters.checked, 
+                characters: 'abcdefghijklmnopqrstuvwxyz'
+            },
+            numbers: {
+                isChecked: form.numbers.checked, 
+                characters: '0123456789'
+            },
+            symbols: {
+                isChecked: form.symbols.checked, 
+                characters: '!@#$%^&*()_+-=[]{}|;:,.<>?/`~'
+            },
+        }
 
-        let caracteresObligatorios = [];
-        let poolCaracteres = '';
-
-        // Construir el conjunto válido
+        const charactersPassword = [];
+        let characters = ''
+        
         Object.values(checkboxs).forEach((checkbox) => {
-            if (checkbox[0]) {
-                poolCaracteres += checkbox[1];
-                let indice = Math.floor(Math.random() * checkbox[1].length);
-                caracteresObligatorios.push(checkbox[1][indice]); // obligatorio
+            if(checkbox.isChecked){
+                characters += checkbox.characters
+                let indice = Math.floor(Math.random() * checkbox.characters.length)
+                charactersPassword.push(checkbox.characters[indice])
             }
-        });
+        })
 
-        // Si no se selecciona nada, evitar error
-        if (poolCaracteres === '') {
-            password.value = '';
-            return;
+        const lengthPassword = lengthCharacter - charactersPassword.length
+        for(let i = 0; i < lengthPassword; i++) {
+            let indice = Math.floor(Math.random() * characters.length)
+            charactersPassword.push(characters[indice])
         }
-
-        // Generar la contraseña
-        const longitudRestante = lengthCharacter - caracteresObligatorios.length;
-        for (let i = 0; i < longitudRestante; i++) {
-            let indice = Math.floor(Math.random() * poolCaracteres.length);
-            caracteresObligatorios.push(poolCaracteres[indice]);
-        }
-
-        // Paso 3: Mezclar (shuffle) todos los caracteres
-        const resultado = caracteresObligatorios.sort(() => Math.random() - 0.5).join('');
-
-        password.value = resultado;
-
+    
+        const randomPassword = charactersPassword.sort(() => Math.random() - 0.5).join('')
+        password.value = randomPassword;
     }) 
 }
 
